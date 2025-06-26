@@ -234,20 +234,20 @@ const Passing: React.FC<PassingProps> = ({ room, currentPlayer }) => {
           </div>
 
           {/* Hand */}
-          <div className="flex flex-wrap gap-3 justify-center mb-6">
+          <div className="flex gap-2 justify-start overflow-x-auto overflow-y-visible scrollbar-hide px-2 py-4 mb-6 min-h-0">
             {currentPlayer.hand.map((card) => (
-              <div key={card.id} className="relative">
+              <div key={card.id} className="relative flex-shrink-0">
                 <Card
                   card={card}
                   onClick={() => handleCardClick(card)}
                   selected={
                     selectedCards.find((c) => c.id === card.id) !== undefined
                   }
-                  className="w-24 h-32"
+                  className="w-20 h-28"
                 />
                 {/* Selection indicator */}
                 {selectedCards.find((c) => c.id === card.id) && (
-                  <div className="absolute -top-3 -right-3 bg-accent text-accent-foreground text-sm w-7 h-7 rounded-full flex items-center justify-center font-bold">
+                  <div className="absolute top-1 right-1 bg-accent text-accent-foreground text-sm w-7 h-7 rounded-full flex items-center justify-center font-bold shadow-lg">
                     ✓
                   </div>
                 )}

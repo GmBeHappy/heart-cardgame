@@ -312,15 +312,15 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
           </div>
 
           {/* Hand */}
-          <div className="flex flex-wrap gap-3 justify-center">
+          <div className="flex gap-2 justify-start overflow-x-auto overflow-y-visible scrollbar-hide px-2 py-2 min-h-0">
             {currentPlayer.hand.map((card) => (
-              <div key={card.id} className="relative">
+              <div key={card.id} className="relative flex-shrink-0">
                 <Card
                   card={card}
                   onClick={() => handleCardClick(card)}
                   disabled={!canPlayCard(card)}
                   selected={selectedCard?.id === card.id}
-                  className="w-24 h-32"
+                  className="w-20 h-28"
                 />
                 {/* Play Button on Selected Card */}
                 {selectedCard?.id === card.id && canPlayCard(card) && (
