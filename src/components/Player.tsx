@@ -9,6 +9,7 @@ interface PlayerProps {
   isCurrentPlayer?: boolean;
   className?: string;
   compact?: boolean;
+  hideHeader?: boolean;
 }
 
 const Player: React.FC<PlayerProps> = ({
@@ -17,6 +18,7 @@ const Player: React.FC<PlayerProps> = ({
   isCurrentPlayer = false,
   className = "",
   compact = false,
+  hideHeader = false,
 }) => {
   if (compact) {
     return (
@@ -32,29 +34,19 @@ const Player: React.FC<PlayerProps> = ({
         ${className}
       `}
       >
-        {/* Player Header */}
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center space-x-2">
-            <h3 className="font-bold text-foreground text-sm">{player.name}</h3>
-            {player.isHost && (
-              <span className="px-2 py-1 text-xs bg-accent/20 text-accent rounded-full font-medium">
-                Host
-              </span>
-            )}
-          </div>
-
-          {/* Ready Status */}
-          <div className="flex items-center space-x-2">
-            {player.isReady ? (
-              <span className="px-2 py-1 text-xs bg-accent/20 text-accent rounded-full font-medium">
-                Ready
-              </span>
-            ) : (
-              <span className="px-2 py-1 text-xs bg-muted text-muted-foreground rounded-full font-medium">
-                Not Ready
-              </span>
-            )}
-          </div>
+        {/* Player Name - Always Visible */}
+        <div className="flex items-center space-x-2 mb-3">
+          <h3 className="font-bold text-foreground text-sm">{player.name}</h3>
+          {player.isHost && (
+            <span className="px-2 py-1 text-xs bg-accent/20 text-accent rounded-full font-medium">
+              Host
+            </span>
+          )}
+          {isCurrentPlayer && (
+            <span className="px-2 py-1 text-xs bg-yellow-500 text-yellow-900 rounded-full font-medium font-bold">
+              ME
+            </span>
+          )}
         </div>
 
         {/* Player Stats */}
@@ -99,30 +91,38 @@ const Player: React.FC<PlayerProps> = ({
       ${className}
     `}
     >
-      {/* Player Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center space-x-3">
-          <h3 className="font-bold text-foreground text-lg">{player.name}</h3>
-          {player.isHost && (
-            <span className="px-3 py-1 text-xs bg-accent/20 text-accent rounded-full font-medium">
-              Host
-            </span>
-          )}
-        </div>
-
-        {/* Ready Status */}
-        <div className="flex items-center space-x-3">
-          {player.isReady ? (
-            <span className="px-3 py-1 text-xs bg-accent/20 text-accent rounded-full font-medium">
-              Ready
-            </span>
-          ) : (
-            <span className="px-3 py-1 text-xs bg-muted text-muted-foreground rounded-full font-medium">
-              Not Ready
-            </span>
-          )}
-        </div>
+      {/* Player Name - Always Visible */}
+      <div className="flex items-center space-x-3 mb-4">
+        <h3 className="font-bold text-foreground text-lg">{player.name}</h3>
+        {player.isHost && (
+          <span className="px-3 py-1 text-xs bg-accent/20 text-accent rounded-full font-medium">
+            Host
+          </span>
+        )}
+        {isCurrentPlayer && (
+          <span className="px-3 py-1 text-xs bg-yellow-500 text-yellow-900 rounded-full font-medium font-bold">
+            ME
+          </span>
+        )}
       </div>
+
+      {/* Player Header - Conditional */}
+      {!hideHeader && (
+        <div className="flex items-center justify-between mb-4">
+          {/* Ready Status */}
+          <div className="flex items-center space-x-3">
+            {player.isReady ? (
+              <span className="px-3 py-1 text-xs bg-accent/20 text-accent rounded-full font-medium">
+                Ready
+              </span>
+            ) : (
+              <span className="px-3 py-1 text-xs bg-muted text-muted-foreground rounded-full font-medium">
+                Not Ready
+              </span>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Player Stats */}
       <div className="grid grid-cols-2 gap-6 mb-4">

@@ -104,35 +104,25 @@ const Passing: React.FC<PassingProps> = ({ room, currentPlayer }) => {
   );
 
   return (
-    <div className="h-screen bg-gradient-to-br from-background via-background to-muted flex flex-col overflow-hidden relative">
+    <div className="h-screen bg-gradient-to-br from-background via-background to-muted flex flex-col min-h-0 overflow-hidden relative">
+      {/* Room Code in Top Right */}
+      <div className="absolute top-4 right-8 z-20 bg-accent/20 rounded-lg px-4 py-2 border border-accent/30 text-sm text-accent font-semibold shadow-lg">
+        Room: {room.code}
+      </div>
+
       {/* Single animated background element for better performance */}
       <div className="absolute inset-0 opacity-3">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/10 rounded-full blur-3xl pulse-glow"></div>
       </div>
 
-      {/* Header */}
-      <div className="glass border-b border-border/50 p-6 flex-shrink-0 relative z-10">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-foreground">Passing Phase</h1>
-          <div className="text-right">
-            <div className="text-sm text-muted-foreground">
-              Room: {room.code}
-            </div>
-            <div className="text-sm text-muted-foreground">
-              Pass {cardsToPass} cards {directionText}
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Game Table - Main Content */}
-      <div className="flex-1 relative max-w-6xl mx-auto w-full p-6 min-h-0">
-        <div className="relative bg-gradient-to-br from-card to-muted rounded-full aspect-square max-w-xl mx-auto shadow-2xl border-4 border-border/50 relative overflow-hidden">
+      <div className="flex-1 relative max-w-8xl mx-auto w-full p-6 pb-0 flex items-center justify-center min-h-0 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-card to-muted rounded-3xl aspect-[2/1] w-full max-w-6xl max-h-[80vh] mx-auto shadow-2xl border-4 border-border/50 overflow-hidden">
           {/* Table felt pattern */}
-          <div className="absolute inset-0 bg-accent/5 rounded-full"></div>
+          <div className="absolute inset-0 bg-accent/5 rounded-3xl"></div>
 
           {/* Subtle glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-transparent rounded-full"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-transparent rounded-3xl"></div>
 
           {/* Center - Passing Info */}
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -169,7 +159,7 @@ const Passing: React.FC<PassingProps> = ({ room, currentPlayer }) => {
                     : ""
                 }`}
               >
-                <Player player={topPlayer} compact={true} />
+                <Player player={topPlayer} compact={true} hideHeader={true} />
               </div>
             </div>
           )}
@@ -184,7 +174,7 @@ const Passing: React.FC<PassingProps> = ({ room, currentPlayer }) => {
                     : ""
                 }`}
               >
-                <Player player={rightPlayer} compact={true} />
+                <Player player={rightPlayer} compact={true} hideHeader={true} />
               </div>
             </div>
           )}
@@ -199,78 +189,70 @@ const Passing: React.FC<PassingProps> = ({ room, currentPlayer }) => {
                     : ""
                 }`}
               >
-                <Player player={leftPlayer} compact={true} />
+                <Player player={leftPlayer} compact={true} hideHeader={true} />
               </div>
             </div>
           )}
-        </div>
-      </div>
 
-      {/* Current Player Area - Bottom */}
-      <div className="flex-shrink-0 glass border-t border-border/50 p-6 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          {/* Current Player Info */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-6">
+          {/* Bottom (Current) Player */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+            <div
+              className={`glass rounded-xl p-3 shadow-lg border border-border/50 ${
+                targetPlayer?.id === currentPlayer.id
+                  ? "ring-4 ring-accent/50"
+                  : ""
+              }`}
+            >
               <Player
                 player={currentPlayer}
                 isCurrentPlayer={true}
                 compact={true}
+                hideHeader={true}
               />
             </div>
+          </div>
+        </div>
+      </div>
 
-            {/* Passing Status */}
-            <div className="text-center">
-              {targetPlayer ? (
-                <p className="text-accent font-semibold text-lg">
-                  Passing {cardsToPass} cards to {targetPlayer.name}
-                </p>
-              ) : (
-                <p className="text-muted-foreground text-lg">
-                  No passing this round
-                </p>
+      {/* Current Player Area - Bottom */}
+      <div className="flex-shrink-0 glass border-t border-border/50 p-6 pt-8 relative z-10">
+        {/* Hand */}
+        <div className="flex gap-2 justify-center overflow-x-auto overflow-y-visible scrollbar-hide px-2 py-2 mb-4 min-h-0">
+          {currentPlayer.hand.map((card) => (
+            <div key={card.id} className="relative flex-shrink-0">
+              <Card
+                card={card}
+                onClick={() => handleCardClick(card)}
+                selected={
+                  selectedCards.find((c) => c.id === card.id) !== undefined
+                }
+                className="w-20 h-28"
+              />
+              {/* Selection indicator */}
+              {selectedCards.find((c) => c.id === card.id) && (
+                <div className="absolute top-1 right-1 bg-accent text-accent-foreground text-sm w-7 h-7 rounded-full flex items-center justify-center font-bold shadow-lg">
+                  ✓
+                </div>
               )}
             </div>
-          </div>
+          ))}
+        </div>
 
-          {/* Hand */}
-          <div className="flex gap-2 justify-start overflow-x-auto overflow-y-visible scrollbar-hide px-2 py-4 mb-6 min-h-0">
-            {currentPlayer.hand.map((card) => (
-              <div key={card.id} className="relative flex-shrink-0">
-                <Card
-                  card={card}
-                  onClick={() => handleCardClick(card)}
-                  selected={
-                    selectedCards.find((c) => c.id === card.id) !== undefined
-                  }
-                  className="w-20 h-28"
-                />
-                {/* Selection indicator */}
-                {selectedCards.find((c) => c.id === card.id) && (
-                  <div className="absolute top-1 right-1 bg-accent text-accent-foreground text-sm w-7 h-7 rounded-full flex items-center justify-center font-bold shadow-lg">
-                    ✓
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-
-          {/* Controls */}
-          <div className="flex justify-center gap-6">
-            <button
-              onClick={handleClearSelection}
-              className="px-6 py-3 glass hover:bg-white/10 text-foreground rounded-xl font-semibold transition-all duration-200 focus-ring border border-border/50"
-            >
-              Clear Selection
-            </button>
-            <button
-              onClick={handlePassCards}
-              disabled={selectedCards.length !== cardsToPass}
-              className="px-8 py-3 bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 disabled:from-muted disabled:to-muted disabled:text-muted-foreground disabled:cursor-not-allowed text-accent-foreground rounded-xl font-semibold transition-all duration-200 focus-ring"
-            >
-              Pass Cards
-            </button>
-          </div>
+        {/* Controls */}
+        <div className="flex justify-center gap-6">
+          <button
+            onClick={handleClearSelection}
+            className="px-6 py-3 glass hover:bg-white/10 text-foreground rounded-xl font-semibold transition-all duration-200 focus-ring border border-border/50"
+          >
+            Clear Selection
+          </button>
+          <button
+            onClick={handlePassCards}
+            disabled={selectedCards.length !== cardsToPass}
+            className="px-8 py-3 bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 disabled:from-muted disabled:to-muted disabled:text-muted-foreground disabled:cursor-not-allowed text-accent-foreground rounded-xl font-semibold transition-all duration-200 focus-ring"
+          >
+            Pass Cards
+          </button>
         </div>
       </div>
     </div>

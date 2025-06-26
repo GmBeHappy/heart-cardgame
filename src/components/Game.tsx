@@ -128,96 +128,72 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-background via-background to-muted flex flex-col overflow-hidden relative">
+    <div className="h-screen bg-gradient-to-br from-background via-background to-muted flex flex-col min-h-0 overflow-hidden relative">
+      {/* Game Info in Top Left */}
+      <div className="absolute top-4 left-8 z-20 glass rounded-lg px-4 py-2 border border-border/50 text-sm text-foreground font-semibold shadow-lg">
+        <div>Round {room.roundNumber + 1}</div>
+        <div>End Point: {room.endPoint}</div>
+      </div>
+
+      {/* Scoreboard - Under Game Info */}
+      <div className="absolute top-24 left-8 z-20 glass rounded-lg px-4 py-3 border border-border/50 shadow-lg min-w-[140px]">
+        <div className="text-sm font-semibold text-foreground mb-2 text-center border-b border-border/30 pb-1">
+          Scores
+        </div>
+        <div className="space-y-1">
+          {room.players
+            .sort((a, b) => b.score - a.score) // Sort by score (highest first)
+            .map((player) => {
+              const lowestScore = Math.min(...room.players.map((p) => p.score));
+              const isLowestScore = player.score === lowestScore;
+              return (
+                <div
+                  key={player.id}
+                  className={`flex justify-between items-center text-xs ${
+                    player.id === currentPlayer.id
+                      ? "text-accent font-semibold"
+                      : "text-foreground"
+                  }`}
+                >
+                  <span
+                    className="truncate max-w-[80px] flex items-center gap-1"
+                    title={player.name}
+                  >
+                    {player.id === currentPlayer.id ? "You" : player.name}
+                    {isLowestScore && (
+                      <span
+                        className="text-yellow-500"
+                        title="Lowest score - Best player!"
+                      >
+                        👑
+                      </span>
+                    )}
+                  </span>
+                  <span className="ml-2 font-mono">{player.score}</span>
+                </div>
+              );
+            })}
+        </div>
+      </div>
+
+      {/* Room Code in Top Right */}
+      <div className="absolute top-4 right-8 z-20 bg-accent/20 rounded-lg px-4 py-2 border border-accent/30 text-sm text-accent font-semibold shadow-lg">
+        Room: {room.code}
+      </div>
+
       {/* Single animated background element for better performance */}
       <div className="absolute inset-0 opacity-3">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/10 rounded-full blur-3xl pulse-glow"></div>
       </div>
 
-      {/* Game Header */}
-      <div className="glass border-b border-border/50 p-6 flex-shrink-0 relative z-10">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-foreground">
-            Hearts - Round {room.roundNumber + 1}
-          </h1>
-          <div className="text-right">
-            <div className="text-sm text-muted-foreground">
-              Room: {room.code}
-            </div>
-            <div className="text-sm text-muted-foreground">
-              Turn: {room.players[room.currentTurn]?.name || "Unknown"}
-            </div>
-            <div className="text-sm text-accent font-medium">
-              End Point: {room.endPoint}
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* Game Table - Main Content */}
-      <div className="flex-1 relative max-w-6xl mx-auto w-full p-6 min-h-0">
-        <div className="relative bg-gradient-to-br from-card to-muted rounded-full aspect-square max-w-xl mx-auto shadow-2xl border-4 border-border/50 relative overflow-hidden">
+      <div className="flex-1 relative max-w-8xl mx-auto w-full p-6 pb-0 flex items-center justify-center min-h-0 overflow-hidden">
+        <div className="relative bg-gradient-to-br from-card to-muted rounded-3xl aspect-[4/3] w-full max-w-5xl max-h-[65vh] mx-auto shadow-2xl border-4 border-border/50 overflow-hidden">
           {/* Table felt pattern */}
-          <div className="absolute inset-0 bg-accent/5 rounded-full"></div>
+          <div className="absolute inset-0 bg-accent/5 rounded-3xl"></div>
 
           {/* Subtle glow effect */}
-          <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-transparent rounded-full"></div>
-
-          {/* Center - Current Trick */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <div className="glass rounded-xl p-6 shadow-lg min-w-40 text-center border border-border/50">
-              <h3 className="text-lg font-semibold text-foreground mb-3">
-                Current Trick
-              </h3>
-              {room.currentTrick.length === 0 ? (
-                <p className="text-muted-foreground text-sm">
-                  No cards played yet
-                </p>
-              ) : (
-                <div className="space-y-3">
-                  <div className="flex flex-wrap gap-3 justify-center">
-                    {room.currentTrick.map((card, index) => {
-                      // Calculate the correct player index for this card
-                      const trickStartIndex =
-                        (room.currentTurn -
-                          room.currentTrick.length +
-                          room.players.length) %
-                        room.players.length;
-                      const playerIndex =
-                        (trickStartIndex + index) % room.players.length;
-                      const playerName =
-                        room.players[playerIndex]?.name || "Unknown";
-
-                      return (
-                        <div key={index} className="relative">
-                          <Card card={card} className="w-12 h-16" />
-                          <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
-                            <div className="bg-accent/20 text-accent text-xs px-2 py-1 rounded-full whitespace-nowrap font-medium border border-accent/30">
-                              {playerName}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                  {room.ledSuit && (
-                    <p className="text-xs text-muted-foreground">
-                      Led:{" "}
-                      <span className="text-accent font-medium">
-                        {room.ledSuit === "hearts"
-                          ? "♥"
-                          : room.ledSuit === "diamonds"
-                          ? "♦"
-                          : room.ledSuit === "clubs"
-                          ? "♣"
-                          : "♠"}
-                      </span>
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
+          <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-transparent rounded-3xl"></div>
 
           {/* Top Player */}
           {otherPlayers.find((p) => getPlayerPosition(p.id) === "top") && (
@@ -235,6 +211,33 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
                   compact={true}
                 />
               </div>
+
+              {/* Top Player's Trick Card */}
+              {(() => {
+                const topPlayer = otherPlayers.find(
+                  (p) => getPlayerPosition(p.id) === "top"
+                );
+                if (!topPlayer) return null;
+
+                const trickStartIndex =
+                  (room.currentTurn -
+                    room.currentTrick.length +
+                    room.players.length) %
+                  room.players.length;
+                const playerIndex = room.players.findIndex(
+                  (p) => p.id === topPlayer.id
+                );
+                const cardIndex =
+                  (playerIndex - trickStartIndex + room.players.length) %
+                  room.players.length;
+                const playedCard = room.currentTrick[cardIndex];
+
+                return playedCard ? (
+                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-2">
+                    <Card card={playedCard} className="w-12 h-16" />
+                  </div>
+                ) : null;
+              })()}
             </div>
           )}
 
@@ -257,6 +260,33 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
                   compact={true}
                 />
               </div>
+
+              {/* Right Player's Trick Card */}
+              {(() => {
+                const rightPlayer = otherPlayers.find(
+                  (p) => getPlayerPosition(p.id) === "right"
+                );
+                if (!rightPlayer) return null;
+
+                const trickStartIndex =
+                  (room.currentTurn -
+                    room.currentTrick.length +
+                    room.players.length) %
+                  room.players.length;
+                const playerIndex = room.players.findIndex(
+                  (p) => p.id === rightPlayer.id
+                );
+                const cardIndex =
+                  (playerIndex - trickStartIndex + room.players.length) %
+                  room.players.length;
+                const playedCard = room.currentTrick[cardIndex];
+
+                return playedCard ? (
+                  <div className="absolute top-1/2 right-full transform -translate-y-1/2 mr-2">
+                    <Card card={playedCard} className="w-12 h-16" />
+                  </div>
+                ) : null;
+              })()}
             </div>
           )}
 
@@ -278,17 +308,39 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
                   compact={true}
                 />
               </div>
+
+              {/* Left Player's Trick Card */}
+              {(() => {
+                const leftPlayer = otherPlayers.find(
+                  (p) => getPlayerPosition(p.id) === "left"
+                );
+                if (!leftPlayer) return null;
+
+                const trickStartIndex =
+                  (room.currentTurn -
+                    room.currentTrick.length +
+                    room.players.length) %
+                  room.players.length;
+                const playerIndex = room.players.findIndex(
+                  (p) => p.id === leftPlayer.id
+                );
+                const cardIndex =
+                  (playerIndex - trickStartIndex + room.players.length) %
+                  room.players.length;
+                const playedCard = room.currentTrick[cardIndex];
+
+                return playedCard ? (
+                  <div className="absolute top-1/2 left-full transform -translate-y-1/2 ml-2">
+                    <Card card={playedCard} className="w-12 h-16" />
+                  </div>
+                ) : null;
+              })()}
             </div>
           )}
-        </div>
-      </div>
 
-      {/* Current Player Area - Bottom */}
-      <div className="flex-shrink-0 glass border-t border-border/50 p-6 relative z-10">
-        <div className="max-w-6xl mx-auto">
-          {/* Current Player Info */}
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center space-x-6">
+          {/* Bottom (Current) Player */}
+          <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
+            <div className="glass rounded-xl p-3 shadow-lg border border-border/50">
               <Player
                 player={currentPlayer}
                 isCurrentTurn={isMyTurn}
@@ -297,22 +349,49 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
               />
             </div>
 
-            {/* Turn Status */}
-            <div className="text-center">
-              {isMyTurn ? (
-                <p className="text-accent font-semibold text-lg">
-                  Your turn! Select a card to play.
-                </p>
-              ) : (
-                <p className="text-muted-foreground text-lg">
-                  Waiting for {room.players[room.currentTurn]?.name} to play...
-                </p>
-              )}
-            </div>
+            {/* Current Player's Trick Card */}
+            {(() => {
+              const trickStartIndex =
+                (room.currentTurn -
+                  room.currentTrick.length +
+                  room.players.length) %
+                room.players.length;
+              const playerIndex = room.players.findIndex(
+                (p) => p.id === currentPlayer.id
+              );
+              const cardIndex =
+                (playerIndex - trickStartIndex + room.players.length) %
+                room.players.length;
+              const playedCard = room.currentTrick[cardIndex];
+
+              return playedCard ? (
+                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2">
+                  <Card card={playedCard} className="w-12 h-16" />
+                </div>
+              ) : null;
+            })()}
+          </div>
+        </div>
+      </div>
+
+      {/* Current Player Area - Bottom */}
+      <div className="flex-shrink-0 glass border-t border-border/50 p-6 pt-8 relative z-10">
+        <div className="max-w-6xl mx-auto">
+          {/* Turn Status */}
+          <div className="text-center mb-6">
+            {isMyTurn ? (
+              <p className="text-accent font-semibold text-lg">
+                Your turn! Select a card to play.
+              </p>
+            ) : (
+              <p className="text-muted-foreground text-lg">
+                Waiting for {room.players[room.currentTurn]?.name} to play...
+              </p>
+            )}
           </div>
 
           {/* Hand */}
-          <div className="flex gap-2 justify-start overflow-x-auto overflow-y-visible scrollbar-hide px-2 py-2 min-h-0">
+          <div className="flex gap-2 justify-center overflow-x-auto overflow-y-visible scrollbar-hide px-2 py-2 mb-4 min-h-0">
             {currentPlayer.hand.map((card) => (
               <div key={card.id} className="relative flex-shrink-0">
                 <Card
