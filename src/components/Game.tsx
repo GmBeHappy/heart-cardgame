@@ -128,19 +128,26 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-green-800 to-green-900 flex flex-col overflow-hidden">
+    <div className="h-screen bg-gradient-to-br from-background via-background to-muted flex flex-col overflow-hidden relative">
+      {/* Single animated background element for better performance */}
+      <div className="absolute inset-0 opacity-3">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/10 rounded-full blur-3xl pulse-glow"></div>
+      </div>
+
       {/* Game Header */}
-      <div className="bg-white shadow-lg p-3 flex-shrink-0">
+      <div className="glass border-b border-border/50 p-6 flex-shrink-0 relative z-10">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <h1 className="text-xl font-bold text-gray-800">
+          <h1 className="text-2xl font-bold text-foreground">
             Hearts - Round {room.roundNumber + 1}
           </h1>
           <div className="text-right">
-            <div className="text-sm text-gray-600">Room: {room.code}</div>
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-muted-foreground">
+              Room: {room.code}
+            </div>
+            <div className="text-sm text-muted-foreground">
               Turn: {room.players[room.currentTurn]?.name || "Unknown"}
             </div>
-            <div className="text-sm text-green-600 font-medium">
+            <div className="text-sm text-accent font-medium">
               End Point: {room.endPoint}
             </div>
           </div>
@@ -148,22 +155,27 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
       </div>
 
       {/* Game Table - Main Content */}
-      <div className="flex-1 relative max-w-6xl mx-auto w-full p-4 min-h-0">
-        <div className="relative bg-green-700 rounded-full aspect-square max-w-xl mx-auto shadow-2xl border-8 border-green-600">
+      <div className="flex-1 relative max-w-6xl mx-auto w-full p-6 min-h-0">
+        <div className="relative bg-gradient-to-br from-card to-muted rounded-full aspect-square max-w-xl mx-auto shadow-2xl border-4 border-border/50 relative overflow-hidden">
           {/* Table felt pattern */}
-          <div className="absolute inset-0 bg-green-600 rounded-full opacity-20"></div>
+          <div className="absolute inset-0 bg-accent/5 rounded-full"></div>
+
+          {/* Subtle glow effect */}
+          <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-transparent rounded-full"></div>
 
           {/* Center - Current Trick */}
           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-            <div className="bg-white rounded-lg p-3 shadow-lg min-w-36 text-center">
-              <h3 className="text-lg font-semibold text-gray-800 mb-2">
+            <div className="glass rounded-xl p-6 shadow-lg min-w-40 text-center border border-border/50">
+              <h3 className="text-lg font-semibold text-foreground mb-3">
                 Current Trick
               </h3>
               {room.currentTrick.length === 0 ? (
-                <p className="text-gray-500 text-sm">No cards played yet</p>
+                <p className="text-muted-foreground text-sm">
+                  No cards played yet
+                </p>
               ) : (
-                <div className="space-y-2">
-                  <div className="flex flex-wrap gap-2 justify-center">
+                <div className="space-y-3">
+                  <div className="flex flex-wrap gap-3 justify-center">
                     {room.currentTrick.map((card, index) => {
                       // Calculate the correct player index for this card
                       const trickStartIndex =
@@ -178,9 +190,9 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
 
                       return (
                         <div key={index} className="relative">
-                          <Card card={card} className="w-10 h-14" />
-                          <div className="absolute -top-5 left-1/2 transform -translate-x-1/2">
-                            <div className="bg-blue-500 text-white text-xs px-1 py-0.5 rounded whitespace-nowrap">
+                          <Card card={card} className="w-12 h-16" />
+                          <div className="absolute -top-6 left-1/2 transform -translate-x-1/2">
+                            <div className="bg-accent/20 text-accent text-xs px-2 py-1 rounded-full whitespace-nowrap font-medium border border-accent/30">
                               {playerName}
                             </div>
                           </div>
@@ -189,15 +201,17 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
                     })}
                   </div>
                   {room.ledSuit && (
-                    <p className="text-xs text-gray-600">
+                    <p className="text-xs text-muted-foreground">
                       Led:{" "}
-                      {room.ledSuit === "hearts"
-                        ? "♥"
-                        : room.ledSuit === "diamonds"
-                        ? "♦"
-                        : room.ledSuit === "clubs"
-                        ? "♣"
-                        : "♠"}
+                      <span className="text-accent font-medium">
+                        {room.ledSuit === "hearts"
+                          ? "♥"
+                          : room.ledSuit === "diamonds"
+                          ? "♦"
+                          : room.ledSuit === "clubs"
+                          ? "♣"
+                          : "♠"}
+                      </span>
                     </p>
                   )}
                 </div>
@@ -207,8 +221,8 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
 
           {/* Top Player */}
           {otherPlayers.find((p) => getPlayerPosition(p.id) === "top") && (
-            <div className="absolute top-2 left-1/2 transform -translate-x-1/2">
-              <div className="bg-white rounded-lg p-2 shadow-lg">
+            <div className="absolute top-4 left-1/2 transform -translate-x-1/2">
+              <div className="glass rounded-xl p-3 shadow-lg border border-border/50">
                 <Player
                   player={
                     otherPlayers.find((p) => getPlayerPosition(p.id) === "top")!
@@ -226,8 +240,8 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
 
           {/* Right Player */}
           {otherPlayers.find((p) => getPlayerPosition(p.id) === "right") && (
-            <div className="absolute top-1/2 right-2 transform -translate-y-1/2">
-              <div className="bg-white rounded-lg p-2 shadow-lg">
+            <div className="absolute top-1/2 right-4 transform -translate-y-1/2">
+              <div className="glass rounded-xl p-3 shadow-lg border border-border/50">
                 <Player
                   player={
                     otherPlayers.find(
@@ -248,8 +262,8 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
 
           {/* Left Player */}
           {otherPlayers.find((p) => getPlayerPosition(p.id) === "left") && (
-            <div className="absolute top-1/2 left-2 transform -translate-y-1/2">
-              <div className="bg-white rounded-lg p-2 shadow-lg">
+            <div className="absolute top-1/2 left-4 transform -translate-y-1/2">
+              <div className="glass rounded-xl p-3 shadow-lg border border-border/50">
                 <Player
                   player={
                     otherPlayers.find(
@@ -270,11 +284,11 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
       </div>
 
       {/* Current Player Area - Bottom */}
-      <div className="flex-shrink-0 bg-white shadow-lg p-4">
+      <div className="flex-shrink-0 glass border-t border-border/50 p-6 relative z-10">
         <div className="max-w-6xl mx-auto">
           {/* Current Player Info */}
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center space-x-4">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center space-x-6">
               <Player
                 player={currentPlayer}
                 isCurrentTurn={isMyTurn}
@@ -286,11 +300,11 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
             {/* Turn Status */}
             <div className="text-center">
               {isMyTurn ? (
-                <p className="text-green-600 font-semibold">
+                <p className="text-accent font-semibold text-lg">
                   Your turn! Select a card to play.
                 </p>
               ) : (
-                <p className="text-orange-600">
+                <p className="text-muted-foreground text-lg">
                   Waiting for {room.players[room.currentTurn]?.name} to play...
                 </p>
               )}
@@ -298,7 +312,7 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
           </div>
 
           {/* Hand */}
-          <div className="flex flex-wrap gap-2 justify-center">
+          <div className="flex flex-wrap gap-3 justify-center">
             {currentPlayer.hand.map((card) => (
               <div key={card.id} className="relative">
                 <Card
@@ -306,13 +320,13 @@ const Game: React.FC<GameProps> = ({ room, currentPlayer }) => {
                   onClick={() => handleCardClick(card)}
                   disabled={!canPlayCard(card)}
                   selected={selectedCard?.id === card.id}
-                  className="w-20 h-28"
+                  className="w-24 h-32"
                 />
                 {/* Play Button on Selected Card */}
                 {selectedCard?.id === card.id && canPlayCard(card) && (
                   <button
                     onClick={() => handlePlayCard(card)}
-                    className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 bg-blue-500 hover:bg-blue-600 text-white text-xs px-3 py-1 rounded-full font-semibold shadow-lg transition-colors"
+                    className="absolute -bottom-3 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 text-accent-foreground text-sm px-4 py-2 rounded-full font-semibold shadow-lg transition-all duration-200 focus-ring"
                   >
                     Play
                   </button>

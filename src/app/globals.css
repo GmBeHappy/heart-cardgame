@@ -1,26 +1,235 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Dark theme colors - Vercel/Radix UI inspired */
+  --background: #0a0a0a;
+  --foreground: rgb(240, 240, 240);
+  --muted: rgb(30, 30, 30);
+  --muted-foreground: rgb(160, 160, 160);
+  --border: rgb(50, 50, 50);
+  --input: rgb(20, 20, 20);
+  --accent: #00ffc7;
+  --accent-foreground: #000000;
+  --card: rgb(15, 15, 15);
+  --card-foreground: rgb(240, 240, 240);
+  --popover: rgb(15, 15, 15);
+  --popover-foreground: rgb(240, 240, 240);
+  --primary: #00ffc7;
+  --primary-foreground: #000000;
+  --secondary: rgb(30, 30, 30);
+  --secondary-foreground: rgb(240, 240, 240);
+  --destructive: #ff4444;
+  --destructive-foreground: #ffffff;
+  --ring: #00ffc7;
+  --radius: 0.75rem;
+
+  /* Custom gradients */
+  --gradient-primary: linear-gradient(135deg, #00ffc7 0%, #00d4aa 100%);
+  --gradient-glow: radial-gradient(
+    circle at 50% 50%,
+    rgba(0, 255, 199, 0.1) 0%,
+    transparent 70%
+  );
+  --gradient-background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
 }
 
 @theme inline {
+  /* Color system */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-ring: var(--ring);
+
+  /* Typography */
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Monaco", "Consolas",
+    "Liberation Mono", "Courier New", monospace;
+
+  /* Border radius */
+  --radius: var(--radius);
+
+  /* Spacing - Enhanced for better negative space */
+  --spacing-0: 0px;
+  --spacing-1: 0.25rem;
+  --spacing-2: 0.5rem;
+  --spacing-3: 0.75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+  --spacing-32: 8rem;
+
+  /* Animations */
+  --animate-duration: 0.15s;
+  --animate-ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Optimized keyframes for better performance */
+@keyframes glow {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(0, 255, 199, 0.2);
   }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 199, 0.4);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Base styles with performance optimizations */
+* {
+  border-color: var(--border);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Performance optimizations */
+  will-change: auto;
+  contain: layout style paint;
+}
+
+/* Optimized utility classes */
+.glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  /* Performance optimizations */
+  will-change: auto;
+  contain: layout style paint;
+}
+
+.glow {
+  animation: glow 3s ease-in-out infinite alternate;
+  /* Performance optimizations */
+  will-change: box-shadow;
+}
+
+.float {
+  animation: float 4s ease-in-out infinite;
+  /* Performance optimizations */
+  will-change: transform;
+}
+
+.pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+  /* Performance optimizations */
+  will-change: opacity;
+}
+
+/* Focus styles */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-background;
+}
+
+/* Custom scrollbar with reduced complexity */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--muted);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
+}
+
+/* Performance optimizations for common elements */
+.card,
+.button,
+.input {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+/* Custom fade-in animation classes */
+.fade-in-animation {
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+
+.fade-in-animation.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered animation delays */
+.fade-in-delay-0 {
+  transition-delay: 0ms;
+}
+.fade-in-delay-200 {
+  transition-delay: 200ms;
+}
+.fade-in-delay-400 {
+  transition-delay: 400ms;
+}
+.fade-in-delay-600 {
+  transition-delay: 600ms;
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  .float,
+  .pulse-glow {
+    animation: none;
+  }
 }

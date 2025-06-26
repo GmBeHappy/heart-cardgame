@@ -22,35 +22,35 @@ const Player: React.FC<PlayerProps> = ({
     return (
       <div
         className={`
-        relative p-2 rounded-lg border-2 transition-all duration-200
+        relative p-4 rounded-xl border transition-all duration-200
         ${
           isCurrentTurn
-            ? "border-yellow-400 bg-yellow-50 shadow-lg"
-            : "border-gray-300 bg-white"
+            ? "border-accent bg-accent/10 shadow-lg glow"
+            : "border-border glass"
         }
-        ${isCurrentPlayer ? "ring-2 ring-blue-400" : ""}
+        ${isCurrentPlayer ? "ring-2 ring-accent/50" : ""}
         ${className}
       `}
       >
         {/* Player Header */}
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center space-x-1">
-            <h3 className="font-bold text-gray-800 text-sm">{player.name}</h3>
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-2">
+            <h3 className="font-bold text-foreground text-sm">{player.name}</h3>
             {player.isHost && (
-              <span className="px-1 py-0.5 text-xs bg-purple-100 text-purple-800 rounded">
+              <span className="px-2 py-1 text-xs bg-accent/20 text-accent rounded-full font-medium">
                 Host
               </span>
             )}
           </div>
 
           {/* Ready Status */}
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-2">
             {player.isReady ? (
-              <span className="px-1 py-0.5 text-xs bg-green-100 text-green-800 rounded">
+              <span className="px-2 py-1 text-xs bg-accent/20 text-accent rounded-full font-medium">
                 Ready
               </span>
             ) : (
-              <span className="px-1 py-0.5 text-xs bg-gray-100 text-gray-600 rounded">
+              <span className="px-2 py-1 text-xs bg-muted text-muted-foreground rounded-full font-medium">
                 Not Ready
               </span>
             )}
@@ -58,17 +58,19 @@ const Player: React.FC<PlayerProps> = ({
         </div>
 
         {/* Player Stats */}
-        <div className="grid grid-cols-2 gap-2 text-xs">
+        <div className="grid grid-cols-2 gap-3 text-xs">
           {/* Score */}
-          <div className="flex items-center space-x-1">
-            <span className="text-red-600">🎯</span>
-            <span className="font-semibold text-red-600">{player.score}</span>
+          <div className="flex items-center space-x-2">
+            <span className="text-destructive">🎯</span>
+            <span className="font-semibold text-destructive">
+              {player.score}
+            </span>
           </div>
 
           {/* Cards in Hand */}
-          <div className="flex items-center space-x-1">
-            <span className="text-blue-600">🃏</span>
-            <span className="font-semibold text-blue-600">
+          <div className="flex items-center space-x-2">
+            <span className="text-accent">🃏</span>
+            <span className="font-semibold text-accent">
               {player.hand.length}
             </span>
           </div>
@@ -76,8 +78,8 @@ const Player: React.FC<PlayerProps> = ({
 
         {/* Turn Indicator */}
         {isCurrentTurn && (
-          <div className="absolute -top-1 -left-1 w-4 h-4 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg">
-            <span className="text-white text-xs font-bold">⚡</span>
+          <div className="absolute -top-2 -left-2 w-6 h-6 bg-accent rounded-full flex items-center justify-center shadow-lg">
+            <span className="text-accent-foreground text-xs font-bold">⚡</span>
           </div>
         )}
       </div>
@@ -87,35 +89,35 @@ const Player: React.FC<PlayerProps> = ({
   return (
     <div
       className={`
-      relative p-4 rounded-lg border-2 transition-all duration-200
+      relative p-6 rounded-xl border transition-all duration-200
       ${
         isCurrentTurn
-          ? "border-yellow-400 bg-yellow-50 shadow-lg"
-          : "border-gray-300 bg-white"
+          ? "border-accent bg-accent/10 shadow-lg glow"
+          : "border-border glass"
       }
-      ${isCurrentPlayer ? "ring-2 ring-blue-400" : ""}
+      ${isCurrentPlayer ? "ring-2 ring-accent/50" : ""}
       ${className}
     `}
     >
       {/* Player Header */}
-      <div className="flex items-center justify-between mb-3">
-        <div className="flex items-center space-x-2">
-          <h3 className="font-bold text-gray-800">{player.name}</h3>
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center space-x-3">
+          <h3 className="font-bold text-foreground text-lg">{player.name}</h3>
           {player.isHost && (
-            <span className="px-2 py-1 text-xs bg-purple-100 text-purple-800 rounded-full">
+            <span className="px-3 py-1 text-xs bg-accent/20 text-accent rounded-full font-medium">
               Host
             </span>
           )}
         </div>
 
         {/* Ready Status */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3">
           {player.isReady ? (
-            <span className="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full">
+            <span className="px-3 py-1 text-xs bg-accent/20 text-accent rounded-full font-medium">
               Ready
             </span>
           ) : (
-            <span className="px-2 py-1 text-xs bg-gray-100 text-gray-600 rounded-full">
+            <span className="px-3 py-1 text-xs bg-muted text-muted-foreground rounded-full font-medium">
               Not Ready
             </span>
           )}
@@ -123,22 +125,28 @@ const Player: React.FC<PlayerProps> = ({
       </div>
 
       {/* Player Stats */}
-      <div className="grid grid-cols-2 gap-4 mb-3">
+      <div className="grid grid-cols-2 gap-6 mb-4">
         {/* Score */}
-        <div className="flex items-center space-x-2">
-          <span className="text-red-600 text-lg">🎯</span>
+        <div className="flex items-center space-x-3">
+          <span className="text-destructive text-xl">🎯</span>
           <div className="flex-1">
-            <div className="text-sm font-semibold text-gray-700">Score</div>
-            <div className="text-lg font-bold text-red-600">{player.score}</div>
+            <div className="text-sm font-semibold text-muted-foreground">
+              Score
+            </div>
+            <div className="text-xl font-bold text-destructive">
+              {player.score}
+            </div>
           </div>
         </div>
 
         {/* Cards in Hand */}
-        <div className="flex items-center space-x-2">
-          <span className="text-blue-600 text-lg">🃏</span>
+        <div className="flex items-center space-x-3">
+          <span className="text-accent text-xl">🃏</span>
           <div className="flex-1">
-            <div className="text-sm font-semibold text-gray-700">Cards</div>
-            <div className="text-lg font-bold text-blue-600">
+            <div className="text-sm font-semibold text-muted-foreground">
+              Cards
+            </div>
+            <div className="text-xl font-bold text-accent">
               {player.hand.length}
             </div>
           </div>
@@ -146,16 +154,16 @@ const Player: React.FC<PlayerProps> = ({
       </div>
 
       {/* Tricks Won */}
-      <div className="mb-3">
-        <div className="text-sm font-semibold text-gray-700 mb-1">
+      <div className="mb-4">
+        <div className="text-sm font-semibold text-foreground mb-2">
           Tricks Won: {player.tricks.length}
         </div>
         {player.tricks.length > 0 && (
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-2">
             {player.tricks.slice(-3).map((trick, index) => (
               <div
                 key={index}
-                className="text-xs bg-gray-100 px-2 py-1 rounded"
+                className="text-xs bg-muted px-3 py-1 rounded-lg text-muted-foreground"
               >
                 {trick.length} cards
               </div>
@@ -166,8 +174,8 @@ const Player: React.FC<PlayerProps> = ({
 
       {/* Passed Cards */}
       {player.passedCards.length > 0 && (
-        <div className="mb-3">
-          <div className="text-sm font-semibold text-gray-700 mb-1">
+        <div className="mb-4">
+          <div className="text-sm font-semibold text-foreground mb-2">
             Passing: {player.passedCards.length} cards
           </div>
         </div>
@@ -175,8 +183,8 @@ const Player: React.FC<PlayerProps> = ({
 
       {/* Turn Indicator */}
       {isCurrentTurn && (
-        <div className="absolute -top-2 -left-2 w-6 h-6 bg-yellow-400 rounded-full flex items-center justify-center shadow-lg">
-          <span className="text-white text-xs font-bold">⚡</span>
+        <div className="absolute -top-3 -left-3 w-8 h-8 bg-accent rounded-full flex items-center justify-center shadow-lg">
+          <span className="text-accent-foreground text-sm font-bold">⚡</span>
         </div>
       )}
     </div>

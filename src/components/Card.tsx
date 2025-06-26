@@ -21,8 +21,8 @@ const Card: React.FC<CardProps> = ({
   // Get suit color
   const getSuitColor = (suit: string) => {
     return suit === "hearts" || suit === "diamonds"
-      ? "text-red-600"
-      : "text-black";
+      ? "text-destructive"
+      : "text-foreground";
   };
 
   // Get suit symbol
@@ -49,17 +49,21 @@ const Card: React.FC<CardProps> = ({
   return (
     <div
       className={`
-        relative w-20 h-28 rounded-lg border-2 shadow-lg cursor-pointer
+        relative w-20 h-28 rounded-xl border shadow-lg cursor-pointer
         transform transition-all duration-200 hover:scale-105
-        bg-white border-gray-300
-        ${selected ? "ring-4 ring-blue-400 ring-opacity-50" : ""}
-        ${disabled ? "opacity-50 cursor-not-allowed" : "hover:shadow-xl"}
+        glass border-border/50
+        ${selected ? "ring-4 ring-accent/50" : ""}
+        ${
+          disabled
+            ? "opacity-50 cursor-not-allowed"
+            : "hover:shadow-xl hover:border-accent/30"
+        }
         ${className}
       `}
       onClick={disabled ? undefined : onClick}
     >
       {/* Top left corner */}
-      <div className="absolute top-1 left-1 text-xs font-bold">
+      <div className="absolute top-2 left-2 text-xs font-bold">
         <div className={getSuitColor(card.suit)}>
           {getRankDisplay(card.rank)}
         </div>
@@ -76,7 +80,7 @@ const Card: React.FC<CardProps> = ({
       </div>
 
       {/* Bottom right corner (rotated) */}
-      <div className="absolute bottom-1 right-1 text-xs font-bold transform rotate-180">
+      <div className="absolute bottom-2 right-2 text-xs font-bold transform rotate-180">
         <div className={getSuitColor(card.suit)}>
           {getRankDisplay(card.rank)}
         </div>
@@ -88,7 +92,7 @@ const Card: React.FC<CardProps> = ({
       {/* Special indicator for Queen of Spades */}
       {card.suit === "spades" && card.rank === "Q" && (
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="bg-yellow-400 text-black text-xs px-1 py-0.5 rounded font-bold">
+          <div className="bg-accent/20 text-accent text-xs px-2 py-1 rounded-full font-bold border border-accent/30">
             Q♠
           </div>
         </div>

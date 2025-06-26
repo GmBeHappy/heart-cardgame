@@ -65,54 +65,62 @@ const HomeMenu: React.FC = () => {
     }
   };
 
-  const handleClearSavedName = () => {
-    localStorage.removeItem("playerName");
-    setPlayerName("");
-    setError(null);
-  };
-
   // Show loading while connecting
   if (!isConnected) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Connecting to game server...</p>
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted flex items-center justify-center relative overflow-hidden">
+        {/* Single animated background element for better performance */}
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/10 rounded-full blur-3xl pulse-glow"></div>
+        </div>
+
+        <div className="text-center relative z-10">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent mx-auto mb-6"></div>
+          <p className="text-muted-foreground text-lg">
+            Connecting to game server...
+          </p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="max-w-md w-full">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Reduced animated background elements for better performance */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/10 rounded-full blur-3xl pulse-glow"></div>
+      </div>
+
+      <div className="max-w-md w-full relative z-10">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            Hearts Card Game
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold text-foreground mb-4 bg-gradient-to-r from-accent to-accent/70 bg-clip-text text-transparent">
+            Hearts
           </h1>
-          <p className="text-gray-600">Traditional trick-taking card game</p>
+          <p className="text-muted-foreground text-lg">
+            Traditional trick-taking card game
+          </p>
         </div>
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          <div className="glass border-destructive/20 text-destructive px-6 py-4 rounded-xl mb-6">
             {error}
           </div>
         )}
 
         {/* Player Name Input */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+        <div className="glass rounded-xl p-6 mb-6">
+          <label className="block text-sm font-medium text-foreground mb-3">
             Your Name
           </label>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <input
               type="text"
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
               placeholder="Enter your name"
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-4 py-3 bg-input border border-border rounded-lg focus-ring text-foreground placeholder-muted-foreground transition-colors duration-200"
               maxLength={20}
               onKeyPress={(e) => {
                 if (e.key === "Enter" && playerName.trim()) {
@@ -123,22 +131,16 @@ const HomeMenu: React.FC = () => {
             <button
               onClick={handleSaveName}
               disabled={!playerName.trim()}
-              className="px-4 py-2 bg-gray-500 hover:bg-gray-600 disabled:bg-gray-300 text-white font-semibold rounded-md transition-colors"
+              className="px-4 py-3 bg-secondary hover:bg-secondary/80 disabled:bg-muted disabled:text-muted-foreground text-secondary-foreground font-semibold rounded-lg transition-colors duration-200 focus-ring"
             >
               Save
             </button>
           </div>
           {localStorage.getItem("playerName") && (
-            <div className="flex items-center justify-between">
-              <p className="text-sm text-green-600">
+            <div className="flex items-center justify-between mt-3">
+              <p className="text-sm text-accent">
                 ✓ Name saved for future sessions
               </p>
-              <button
-                onClick={handleClearSavedName}
-                className="text-sm text-red-500 hover:text-red-700 underline"
-              >
-                Clear
-              </button>
             </div>
           )}
         </div>
@@ -148,7 +150,7 @@ const HomeMenu: React.FC = () => {
           <button
             onClick={() => setShowCreateRoom(true)}
             disabled={!playerName.trim()}
-            className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+            className="w-full bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 disabled:from-muted disabled:to-muted disabled:text-muted-foreground text-accent-foreground font-semibold py-4 px-6 rounded-xl transition-all duration-200 focus-ring"
           >
             Create New Room
           </button>
@@ -156,7 +158,7 @@ const HomeMenu: React.FC = () => {
           <button
             onClick={() => setShowJoinRoom(true)}
             disabled={!playerName.trim()}
-            className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+            className="w-full glass hover:bg-white/10 text-foreground font-semibold py-4 px-6 rounded-xl transition-all duration-200 focus-ring border border-border/50"
           >
             Join Existing Room
           </button>
@@ -164,22 +166,24 @@ const HomeMenu: React.FC = () => {
 
         {/* Create Room Modal */}
         {showCreateRoom && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg p-6 max-w-sm w-full">
-              <h2 className="text-xl font-bold mb-4">Create Room</h2>
-              <p className="text-gray-600 mb-4">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="glass rounded-xl p-8 max-w-sm w-full">
+              <h2 className="text-2xl font-bold mb-4 text-foreground">
+                Create Room
+              </h2>
+              <p className="text-muted-foreground mb-6">
                 Create a new Hearts game room and invite friends to join!
               </p>
               <div className="flex space-x-3">
                 <button
                   onClick={handleCreateRoom}
-                  className="flex-1 bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                  className="flex-1 bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 text-accent-foreground font-semibold py-3 px-4 rounded-lg transition-all duration-200 focus-ring"
                 >
                   Create
                 </button>
                 <button
                   onClick={() => setShowCreateRoom(false)}
-                  className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-2 px-4 rounded-lg transition-colors"
+                  className="flex-1 glass hover:bg-white/10 text-foreground font-semibold py-3 px-4 rounded-lg transition-all duration-200 focus-ring"
                 >
                   Cancel
                 </button>
@@ -190,31 +194,42 @@ const HomeMenu: React.FC = () => {
 
         {/* Join Room Modal */}
         {showJoinRoom && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg p-6 max-w-sm w-full">
-              <h2 className="text-xl font-bold mb-4">Join Room</h2>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+            <div className="glass rounded-xl p-8 max-w-sm w-full">
+              <h2 className="text-2xl font-bold mb-4 text-foreground">
+                Join Room
+              </h2>
+              <label className="block text-sm font-medium text-foreground mb-3">
                 Room Code
               </label>
               <input
                 type="text"
                 value={roomCode}
-                onChange={(e) => setRoomCode(e.target.value)}
+                onChange={(e) => setRoomCode(e.target.value.toUpperCase())}
                 placeholder="Enter room code"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
+                className="w-full px-4 py-3 bg-input border border-border rounded-lg focus-ring text-foreground placeholder-muted-foreground transition-all duration-200 mb-6"
                 maxLength={6}
+                onKeyPress={(e) => {
+                  if (
+                    e.key === "Enter" &&
+                    playerName.trim() &&
+                    roomCode.trim()
+                  ) {
+                    handleJoinRoom();
+                  }
+                }}
               />
               <div className="flex space-x-3">
                 <button
                   onClick={handleJoinRoom}
-                  disabled={!roomCode.trim()}
-                  className="flex-1 bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                  disabled={!playerName.trim() || !roomCode.trim()}
+                  className="flex-1 bg-gradient-to-r from-accent to-accent/80 hover:from-accent/90 hover:to-accent/70 disabled:from-muted disabled:to-muted disabled:text-muted-foreground text-accent-foreground font-semibold py-3 px-4 rounded-lg transition-all duration-200 focus-ring"
                 >
                   Join
                 </button>
                 <button
                   onClick={() => setShowJoinRoom(false)}
-                  className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-2 px-4 rounded-lg transition-colors"
+                  className="flex-1 glass hover:bg-white/10 text-foreground font-semibold py-3 px-4 rounded-lg transition-all duration-200 focus-ring"
                 >
                   Cancel
                 </button>
@@ -222,19 +237,6 @@ const HomeMenu: React.FC = () => {
             </div>
           </div>
         )}
-
-        {/* Instructions */}
-        <div className="mt-8 bg-white rounded-lg shadow-lg p-4">
-          <h3 className="font-semibold text-gray-800 mb-2">
-            How to Play Hearts:
-          </h3>
-          <ul className="text-sm text-gray-600 space-y-1">
-            <li>• Create a room and share the code with 3 friends</li>
-            <li>• Each round, pass 3 cards to another player</li>
-            <li>• Avoid collecting hearts and the Queen of Spades</li>
-            <li>• Lowest score wins the game!</li>
-          </ul>
-        </div>
       </div>
     </div>
   );
