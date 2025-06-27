@@ -4,9 +4,9 @@
   "description": "Real-time multiplayer Hearth Card game server",
   "main": "index.ts",
   "scripts": {
-    "dev": "tsx watch index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js"
+    "dev": "bun --watch index.ts",
+    "build": "bun build index.ts --outdir dist --target node",
+    "start": "bun index.ts"
   },
   "dependencies": {
     "socket.io": "^4.8.1",
@@ -15,7 +15,6 @@
   "devDependencies": {
     "@types/node": "^20",
     "@types/uuid": "^10.0.0",
-    "tsx": "^4.0.0",
     "typescript": "^5"
   }
 }

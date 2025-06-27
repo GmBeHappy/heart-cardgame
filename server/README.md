@@ -1,6 +1,6 @@
 # Hearts Card Game Server
 
-A refactored Node.js/TypeScript server for the Hearts card game using Socket.IO, organized in a clean MVC architecture.
+A refactored Bun/TypeScript server for the Hearts card game using Socket.IO, organized in a clean MVC architecture.
 
 ## Project Structure
 
@@ -68,12 +68,12 @@ server/
 1. Install dependencies:
 
    ```bash
-   npm install
+   bun install
    ```
 
 2. Start the server:
    ```bash
-   npm start
+   bun start
    ```
 
 The server will run on port 3001 by default (configurable via PORT environment variable).
