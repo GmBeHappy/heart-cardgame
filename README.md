@@ -197,6 +197,68 @@ docker-compose up --build
 docker-compose down
 ```
 
+### Docker Environment Variables
+
+For Docker deployments, environment variables are handled differently:
+
+#### Environment File Structure
+
+When running `docker-compose` from the root directory, create a `.env` file in the root:
+
+```bash
+# Root directory .env file (same level as docker-compose.yml)
+NEXT_PUBLIC_SERVER_URL=http://server:3001
+NODE_ENV=production
+PORT=3001
+CORS_ORIGIN=http://localhost:3000
+```
+
+**File Structure:**
+
+```
+try-hearth/
+├── .env                    # Root-level environment file
+├── docker-compose.yml      # Docker Compose configuration
+├── frontend/
+│   ├── .env.local         # Frontend-specific (optional)
+│   └── ...
+└── server/
+    ├── .env               # Server-specific (optional)
+    └── ...
+```
+
+#### Frontend (Next.js)
+
+- **Build-time variables**: Use `build.args` in docker-compose.yml for `NEXT_PUBLIC_*` variables
+- **Runtime variables**: Use `environment` in docker-compose.yml for other variables
+
+Example docker-compose.yml:
+
+```yaml
+frontend:
+  build:
+    context: ./frontend
+    args:
+      NEXT_PUBLIC_SERVER_URL: http://server:3001 # Build-time
+    environment:
+      NODE_ENV: production # Runtime
+```
+
+#### Backend
+
+- All environment variables are runtime variables
+- Use `environment` in docker-compose.yml
+
+Example:
+
+```yaml
+server:
+  environment:
+    NODE_ENV: production
+    PORT: 3001
+    CORS_ORIGIN: http://localhost:3000
+```
+
 ### Container Details
 
 - **Frontend**: Next.js app with hot reload (dev) or optimized build (prod)

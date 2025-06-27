@@ -13,6 +13,10 @@ RUN bun install
 # Copy source code
 COPY . .
 
+# Build arguments for environment variables
+ARG NEXT_PUBLIC_SERVER_URL
+ENV NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL
+
 # Build the application
 RUN bun run build
 
