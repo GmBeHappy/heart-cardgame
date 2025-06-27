@@ -38,6 +38,8 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
     const newSocket = io(serverUrl, {
       transports: ["websocket"],
       autoConnect: true,
+      secure: true,
+      rejectUnauthorized: false,
     });
 
     newSocket.on("connect", () => {

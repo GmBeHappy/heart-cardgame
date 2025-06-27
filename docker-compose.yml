@@ -10,6 +10,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+      - NEXT_PUBLIC_SERVER_URL=http://server:3001
     depends_on:
       - server
     networks:
@@ -25,6 +26,7 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3001
+      - CORS_ORIGIN=http://localhost:3000
     networks:
       - app-network
 

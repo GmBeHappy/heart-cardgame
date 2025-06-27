@@ -205,6 +205,50 @@ docker-compose down
 
 ## 🚀 Deployment
 
+### Environment Configuration
+
+Before deploying, you need to configure the server URL for your environment:
+
+#### Frontend Environment Variables
+
+Create a `.env.local` file in the `frontend/` directory:
+
+```bash
+# For local development
+NEXT_PUBLIC_SERVER_URL=http://localhost:3001
+
+# For production (replace with your actual server URL)
+NEXT_PUBLIC_SERVER_URL=https://heart-api.game.witchayut.com
+```
+
+**Important Notes:**
+
+- The `NEXT_PUBLIC_` prefix is required for Next.js to expose the variable to the browser
+- For local development, use `http://localhost:3001`
+- For production, use your deployed server URL (e.g., `https://heart-api.game.witchayut.com`)
+- If no environment variable is set, the app will automatically detect localhost vs production
+
+#### Backend Environment Variables
+
+Create a `.env` file in the `server/` directory:
+
+```bash
+# Server configuration
+NODE_ENV=production
+PORT=3001
+
+# CORS settings (required for frontend connection)
+# For local development: http://localhost:3000
+# For production: https://your-frontend-domain.com
+CORS_ORIGIN=https://your-frontend-domain.com
+```
+
+**Important Notes:**
+
+- `CORS_ORIGIN` must match your frontend domain exactly
+- Include the protocol (http:// or https://) in the CORS_ORIGIN
+- For multiple domains, you can use an array: `["http://localhost:3000", "https://your-domain.com"]`
+
 ### Frontend Deployment (Vercel)
 
 1. **Connect repository** to Vercel
