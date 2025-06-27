@@ -51,4 +51,4 @@ COPY --from=development /app/dist ./dist
 EXPOSE 3001
 
 # Start the application
-CMD ["bun", "start"] 
+CMD ["bun", "dist/index.js"] 
