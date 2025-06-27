@@ -36,10 +36,14 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001";
 
     const newSocket = io(serverUrl, {
-      transports: ["websocket"],
+      transports: ["websocket", "polling"],
       autoConnect: true,
       secure: true,
       rejectUnauthorized: false,
+      timeout: 20000,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
     });
 
     newSocket.on("connect", () => {
@@ -47,9 +51,23 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       setIsConnected(true);
     });
 
-    newSocket.on("disconnect", () => {
-      console.log("Disconnected from server");
+    newSocket.on("disconnect", (reason) => {
+      console.log("Disconnected from server:", reason);
       setIsConnected(false);
+    });
+
+    newSocket.on("connect_error", (error) => {
+      console.error("Connection error:", error);
+      setIsConnected(false);
+    });
+
+    newSocket.on("reconnect", (attemptNumber) => {
+      console.log("Reconnected to server after", attemptNumber, "attempts");
+      setIsConnected(true);
+    });
+
+    newSocket.on("reconnect_error", (error) => {
+      console.error("Reconnection error:", error);
     });
 
     newSocket.on("error", (error) => {
