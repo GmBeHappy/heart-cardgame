@@ -30,12 +30,9 @@ export function createHttpServer(): HttpServer {
 }
 
 export function createSocketIOServer(httpServer: HttpServer): Server {
-  // Get CORS origin from environment or use default
-  const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:3000";
-
   return new Server(httpServer, {
     cors: {
-      origin: corsOrigin,
+      origin: "*",
       methods: ["GET", "POST"],
       credentials: true,
     },
