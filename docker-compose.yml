@@ -12,6 +12,7 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+      - NEXT_PUBLIC_SERVER_URL=${NEXT_PUBLIC_SERVER_URL:-http://server:3001}
     env_file:
       - .env
     depends_on:
@@ -30,6 +31,7 @@ services:
       - NODE_ENV=production
       - PORT=3001
       - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:3000}
+      - HOST=0.0.0.0
     env_file:
       - .env
     networks:

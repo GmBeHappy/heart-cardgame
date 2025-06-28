@@ -32,9 +32,21 @@ export function createHttpServer(): HttpServer {
 export function createSocketIOServer(httpServer: HttpServer): Server {
   return new Server(httpServer, {
     cors: {
-      origin: "*",
+      origin: process.env.CORS_ORIGIN || "*",
       methods: ["GET", "POST"],
       credentials: true,
+      allowedHeaders: ["Content-Type", "Authorization"],
+    },
+    transports: ["websocket", "polling"],
+    allowEIO3: true,
+    pingTimeout: 60000,
+    pingInterval: 25000,
+    upgradeTimeout: 10000,
+    maxHttpBufferSize: 1e6,
+    // Handle proxy scenarios
+    allowRequest: (req, callback) => {
+      // Allow all requests for now, you can add authentication here
+      callback(null, true);
     },
   });
 }
