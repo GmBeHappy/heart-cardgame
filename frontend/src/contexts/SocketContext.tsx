@@ -36,7 +36,7 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3001";
 
     const newSocket = io(serverUrl, {
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"],
       autoConnect: true,
       secure: true,
       rejectUnauthorized: false,
