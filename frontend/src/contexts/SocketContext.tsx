@@ -47,10 +47,6 @@ export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
       reconnectionDelayMax: 5000,
       // Handle proxy scenarios
       forceNew: true,
-      // Add headers for proxy
-      extraHeaders: {
-        "X-Forwarded-For": "true",
-      },
     });
 
     newSocket.on("connect", () => {
